@@ -204,7 +204,7 @@
                                 <rect key="frame" x="16" y="87" width="80" height="79"/>
                                 <constraints>
                                     <constraint firstAttribute="width" constant="72" id="JK8-pT-Rqj"/>
-                                    <constraint firstAttribute="height" constant="72" id="hg2-Je-I0s"/>
+                                    <constraint firstAttribute="height" constant="80" id="hg2-Je-I0s"/>
                                 </constraints>
                             </imageView>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Name" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="B5X-tY-TKx">
@@ -238,6 +238,13 @@
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                     </view>
+                    <connections>
+                        <outlet property="content" destination="63C-WW-q3p" id="snh-KB-D6t"/>
+                        <outlet property="profileImage" destination="VCq-JL-7Bm" id="8j6-yO-P8U"/>
+                        <outlet property="screenName" destination="Rbb-pc-4m1" id="f98-jj-f6k"/>
+                        <outlet property="timestamp" destination="8gh-6P-6im" id="zyC-ah-odO"/>
+                        <outlet property="username" destination="B5X-tY-TKx" id="AzG-nF-rdj"/>
+                    </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="WbW-pT-8ia" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
