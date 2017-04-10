@@ -1,39 +1,53 @@
 //
-//  TweetsViewController.swift
+//  ProfileViewController.swift
 //  TwitteriOS
 //
-//  Created by jiafang_jiang on 4/8/17.
+//  Created by jiafang_jiang on 4/10/17.
 //  Copyright © 2017 jiafang_jiang. All rights reserved.
 //
 
 import UIKit
-import AFNetworking
 
-class TweetsViewController: UIViewController, UITableViewDelegate, UITableViewDataSource, TweetCellDelegate {
+class ProfileViewController: UIViewController, UITableViewDelegate, UITableViewDataSource {
   
+  var user: User!
   var tweets: [Tweet]!
+
+  @IBOutlet weak var viewHolder: UIView!
+  @IBOutlet weak var numFollower: UILabel!
+  @IBOutlet weak var numFollowing: UILabel!
+  @IBOutlet weak var location: UILabel!
+  @IBOutlet weak var screenName: UILabel!
+  @IBOutlet weak var username: UILabel!
+  @IBOutlet weak var userProfileImageView: UIImageView!
   @IBOutlet weak var tableView: UITableView!
   
   override func viewDidLoad() {
-      super.viewDidLoad()
+    super.viewDidLoad()
     
-    let titleImageView = UIImageView(frame: CGRect(x: 0, y: 0, width: 40, height: 40))
-    titleImageView.contentMode = .scaleAspectFit
-    titleImageView.image = #imageLiteral(resourceName: "twitter")
-    self.navigationItem.titleView = titleImageView
+    numFollower.text = String(user.numFollowers)
+    numFollowing.text = String(user.numFollowing)
+    screenName.text = user.screenName
+    username.text = user.name
+    location.text = user.location
+    userProfileImageView.setImageWith(user.profileUrl!)
+    userProfileImageView.layer.cornerRadius = 10
+    userProfileImageView.clipsToBounds = true
     
     tableView.delegate = self
     tableView.dataSource = self
     tableView.rowHeight = UITableViewAutomaticDimension
     tableView.estimatedRowHeight = 125
     
-    TwitterClient.sharedInstance?.homeTimeline(success: { (tweets) in
+    let parameters: [String : String] = ["screen_name": user.screenName!]
+    
+    TwitterClient.sharedInstance?.userTimeline(parameters: parameters, success: { (tweets) in
       self.tweets = tweets
       self.tableView.reloadData()
     }, failure: { (error) in
       print("error: \(error.localizedDescription)")
     })
-      // Do any additional setup after loading the view.
+    // Do any additional setup after loading the view.
   }
 
   override func didReceiveMemoryWarning() {
@@ -65,20 +79,7 @@ class TweetsViewController: UIViewController, UITableViewDelegate, UITableViewDa
     cell.thumbnailImage.setImageWith((tweet.user?.profileUrl)!)
     cell.timestamp.text = tweet.timestamp
     cell.content.text = tweet.text
-    cell.delegate = self
     return cell
-  }
-  
-  func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-    tableView.deselectRow(at: indexPath, animated: true)
-  }
-  
-  func onThumbnailTapped(tweetCell: TweetCell) {
-    let storyBoard: UIStoryboard = UIStoryboard(name: "Main", bundle: nil)
-    let profileViewController = storyBoard.instantiateViewController(withIdentifier: "ProfileViewController") as! ProfileViewController
-    
-    profileViewController.user = tweets[(tableView.indexPath(for: tweetCell)?.row)!].user
-    self.navigationController?.pushViewController(profileViewController, animated: true)
   }
 
 }
