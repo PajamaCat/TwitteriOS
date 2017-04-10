@@ -80,5 +80,14 @@ class TweetsViewController: UIViewController, UITableViewDelegate, UITableViewDa
     profileViewController.user = tweets[(tableView.indexPath(for: tweetCell)?.row)!].user
     self.navigationController?.pushViewController(profileViewController, animated: true)
   }
+  
+  override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+    let cell = sender as! TweetCell
+    let indexPath = tableView.indexPath(for: cell)
+    let tweet = tweets[indexPath!.row]
+    
+    let detailViewController = segue.destination as! DetailedTweetViewController
+    detailViewController.tweet = tweet
+  }
 
 }
