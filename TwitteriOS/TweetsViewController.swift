@@ -9,9 +9,13 @@
 import UIKit
 import AFNetworking
 
-class TweetsViewController: UIViewController, UITableViewDelegate, UITableViewDataSource, TweetCellDelegate {
+class TweetsViewController: UIViewController, UITableViewDelegate, UITableViewDataSource, TweetCellDelegate, ComposeTweetViewControllerDelegate, DetailedTweetViewControllerDelegate {
   
   var tweets: [Tweet]!
+  var shouldRefreshTweets: Bool = false
+  var refreshControl: UIRefreshControl!
+
+  
   @IBOutlet weak var tableView: UITableView!
   
   override func viewDidLoad() {
@@ -27,13 +31,34 @@ class TweetsViewController: UIViewController, UITableViewDelegate, UITableViewDa
     tableView.rowHeight = UITableViewAutomaticDimension
     tableView.estimatedRowHeight = 125
     
+    refreshControl = UIRefreshControl()
+    refreshControl.addTarget(self, action: #selector(TweetsViewController.refreshControlAction(_:)), for: UIControlEvents.valueChanged)
+    tableView.insertSubview(refreshControl, at: 0)
+    
+    fetchTweets()
+      // Do any additional setup after loading the view.
+  }
+  
+  override func viewDidAppear(_ animated: Bool) {
+    if shouldRefreshTweets {
+      fetchTweets()
+      shouldRefreshTweets = false
+    }
+  }
+  
+  func fetchTweets() {
     TwitterClient.sharedInstance?.homeTimeline(success: { (tweets) in
       self.tweets = tweets
       self.tableView.reloadData()
+      self.refreshControl.endRefreshing()
     }, failure: { (error) in
       print("error: \(error.localizedDescription)")
+      self.refreshControl.endRefreshing()
     })
-      // Do any additional setup after loading the view.
+  }
+  
+  func refreshControlAction(_ refreshControl: UIRefreshControl) {
+    fetchTweets()
   }
 
   override func didReceiveMemoryWarning() {
@@ -63,8 +88,10 @@ class TweetsViewController: UIViewController, UITableViewDelegate, UITableViewDa
     cell.userName.text = tweet.user?.name
     cell.tagline.text = tweet.user?.screenName
     cell.thumbnailImage.setImageWith((tweet.user?.profileUrl)!)
-    cell.timestamp.text = tweet.timestamp
+    cell.timestamp.text = tweet.abbreviatedTimestamp()
     cell.content.text = tweet.text
+    cell.bottomActionBar.setFavorited(value: tweet.favorited)
+    cell.bottomActionBar.setRetweeted(value: tweet.retweeted)
     cell.delegate = self
     return cell
   }
@@ -73,7 +100,7 @@ class TweetsViewController: UIViewController, UITableViewDelegate, UITableViewDa
     tableView.deselectRow(at: indexPath, animated: true)
   }
   
-  func onThumbnailTapped(tweetCell: TweetCell) {
+  func tweetCellOnThumbnailTapped(_ tweetCell: TweetCell) {
     let storyBoard: UIStoryboard = UIStoryboard(name: "Main", bundle: nil)
     let profileViewController = storyBoard.instantiateViewController(withIdentifier: "ProfileViewController") as! ProfileViewController
     
@@ -82,12 +109,28 @@ class TweetsViewController: UIViewController, UITableViewDelegate, UITableViewDa
   }
   
   override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-    let cell = sender as! TweetCell
-    let indexPath = tableView.indexPath(for: cell)
-    let tweet = tweets[indexPath!.row]
-    
-    let detailViewController = segue.destination as! DetailedTweetViewController
-    detailViewController.tweet = tweet
+    if let cell = sender as? TweetCell {
+      let indexPath = tableView.indexPath(for: cell)
+      let tweet = tweets[indexPath!.row]
+      
+      let detailViewController = segue.destination as! DetailedTweetViewController
+      detailViewController.tweet = tweet
+    } else if (sender as? UIBarButtonItem != nil) {
+      let composeTweetViewController = segue.destination as! ComposeTweetViewController
+      composeTweetViewController.delegate = self
+    }
+  }
+  
+  func composeTweetViewControllerOnTweetComposed(_ composeTweetViewController: ComposeTweetViewController) {
+    shouldRefreshTweets = true
+  }
+  
+  func detailedTweetViewControllerShouldRefreshTweets(detailedTweetViewController: DetailedTweetViewController) {
+    shouldRefreshTweets = true
+  }
+  
+  func tweetCellShouldRefreshTweets(_ tweetCell: TweetCell) {
+    shouldRefreshTweets = true
   }
 
 }

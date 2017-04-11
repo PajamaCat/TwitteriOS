@@ -8,7 +8,11 @@
 
 import UIKit
 
-class DetailedTweetViewController: UIViewController {
+@objc protocol DetailedTweetViewControllerDelegate {
+  @objc optional func detailedTweetViewControllerShouldRefreshTweets(detailedTweetViewController: DetailedTweetViewController)
+}
+
+class DetailedTweetViewController: UIViewController, BottomActionBarDelegate {
   
   var tweet: Tweet!
 
@@ -17,16 +21,28 @@ class DetailedTweetViewController: UIViewController {
   @IBOutlet weak var screenName: UILabel!
   @IBOutlet weak var username: UILabel!
   @IBOutlet weak var profileImage: UIImageView!
+  @IBOutlet weak var numRetweets: UILabel!
+  @IBOutlet weak var numFavorites: UILabel!
+  @IBOutlet weak var bottomActionBar: BottomActionBar!
+  weak var delegate: DetailedTweetViewControllerDelegate?
   
   override func viewDidLoad() {
     super.viewDidLoad()
 
     // Do any additional setup after loading the view.
     content.text = tweet.text
-    timestamp.text = tweet.timestamp
+    timestamp.text = tweet.fullTimestamp()
     screenName.text = tweet.user?.screenName
     username.text = tweet.user?.name
+    numRetweets.text = String(tweet.retweetCount)
+    numFavorites.text = String(tweet.favoritesCount)
     profileImage.setImageWith((tweet.user?.profileUrl)!)
+    profileImage.layer.cornerRadius = 5
+    profileImage.clipsToBounds = true
+    
+    bottomActionBar.delegate = self
+    bottomActionBar.setFavorited(value: tweet.favorited)
+    bottomActionBar.setRetweeted(value: tweet.retweeted)
   }
 
   override func didReceiveMemoryWarning() {
@@ -44,5 +60,30 @@ class DetailedTweetViewController: UIViewController {
       // Pass the selected object to the new view controller.
   }
   */
+  
+  func bottomActionBar(bottomActionBar: BottomActionBar, onFavoriteTapped value: Bool) {
+    TwitterClient.sharedInstance?.favorites(id: tweet.id, value: value)
+    if value {
+      numFavorites.text = String(Int(numFavorites.text!)! + 1)
+    } else {
+      numFavorites.text = String(Int(numFavorites.text!)! - 1)
+    }
+    
+    delegate?.detailedTweetViewControllerShouldRefreshTweets!(detailedTweetViewController: self)
+  }
+  
+  func bottomActionBar(onCommentTapped: BottomActionBar) {
+    //
+  }
+  
+  func bottomActionBar(bottomActionBar: BottomActionBar, onRetweetTapped value: Bool) {
+    TwitterClient.sharedInstance?.retweet(id: tweet.id, value: value)
+    if value {
+      numRetweets.text = String(Int(numRetweets.text!)! + 1)
+    } else {
+      numRetweets.text = String(Int(numRetweets.text!)! - 1)
+    }
+    delegate?.detailedTweetViewControllerShouldRefreshTweets!(detailedTweetViewController: self)
+  }
 
 }

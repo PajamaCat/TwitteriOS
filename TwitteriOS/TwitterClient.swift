@@ -38,7 +38,6 @@ class TwitterClient: BDBOAuth1SessionManager {
   func homeTimeline(success: @escaping ([Tweet]) -> (), failure: @escaping (Error) -> ()) {
     get("1.1/statuses/home_timeline.json", parameters: nil, progress: nil, success: { (task, response) in
       let dictionaries = response as! [NSDictionary]
-      print(dictionaries)
       let tweets = Tweet.tweetsWithArray(dictionaries: dictionaries)
       success(tweets)
     }) { (task, error) in
@@ -70,11 +69,45 @@ class TwitterClient: BDBOAuth1SessionManager {
     }
   }
   
+  func postTweet(tweetContent: String) {
+    let parameters: [String: String] = ["status": tweetContent]
+    post("1.1/statuses/update.json", parameters: parameters, progress: nil, success: nil) { (task, error) in
+      print("\(error.localizedDescription)")
+    }
+  }
+  
+  func favorites(id: Int, value: Bool) {
+    let parameters: [String: Int] = ["id": id]
+
+    if value {
+      post("1.1/favorites/create.json", parameters: parameters, progress: nil, success: nil) { (task, error) in
+        print("\(error.localizedDescription)")
+      }
+    } else {
+      post("1.1/favorites/destroy.json", parameters: parameters, progress: nil, success: nil) { (task, error) in
+        print("\(error.localizedDescription)")
+      }
+    }
+  }
+  
+  func retweet(id: Int, value: Bool) {
+    let parameters: [String: Int] = ["id": id]
+    
+    if value {
+      post("1.1/statuses/retweet.json", parameters: parameters, progress: nil, success: nil) { (task, error) in
+        print("\(error.localizedDescription)")
+      }
+    } else {
+      post("1.1/statuses/unretweet.json", parameters: parameters, progress: nil, success: nil) { (task, error) in
+        print("\(error.localizedDescription)")
+      }
+    }
+  }
+  
   func handleOpenUrl(url: URL) {
     let requestToken = BDBOAuth1Credential(queryString: url.query)
 
     fetchAccessToken(withPath: "oauth/access_token", method: "POST", requestToken: requestToken, success: { (accessToken) in
-      print("I got access token")
       self.currentAccount(success: { (user) in
         User.currentUser = user
         self.loginSuccess?()

@@ -12,6 +12,7 @@ class ProfileViewController: UIViewController, UITableViewDelegate, UITableViewD
   
   var user: User!
   var tweets: [Tweet]!
+  var refreshControl: UIRefreshControl!
 
   @IBOutlet weak var viewHolder: UIView!
   @IBOutlet weak var numFollower: UILabel!
@@ -39,20 +40,35 @@ class ProfileViewController: UIViewController, UITableViewDelegate, UITableViewD
     tableView.rowHeight = UITableViewAutomaticDimension
     tableView.estimatedRowHeight = 125
     
-    let parameters: [String : String] = ["screen_name": user.screenName!]
+    refreshControl = UIRefreshControl()
+    refreshControl.addTarget(self, action: #selector(TweetsViewController.refreshControlAction(_:)), for: UIControlEvents.valueChanged)
+    tableView.insertSubview(refreshControl, at: 0)
     
-    TwitterClient.sharedInstance?.userTimeline(parameters: parameters, success: { (tweets) in
-      self.tweets = tweets
-      self.tableView.reloadData()
-    }, failure: { (error) in
-      print("error: \(error.localizedDescription)")
-    })
+    
+    fetchUserTimeline()
     // Do any additional setup after loading the view.
   }
 
   override func didReceiveMemoryWarning() {
       super.didReceiveMemoryWarning()
       // Dispose of any resources that can be recreated.
+  }
+  
+  func refreshControlAction(_ refreshControl: UIRefreshControl) {
+    fetchUserTimeline()
+  }
+  
+  func fetchUserTimeline() {
+    let parameters: [String : String] = ["screen_name": user.screenName!]
+
+    TwitterClient.sharedInstance?.userTimeline(parameters: parameters, success: { (tweets) in
+      self.tweets = tweets
+      self.tableView.reloadData()
+      self.refreshControl.endRefreshing()
+    }, failure: { (error) in
+      self.refreshControl.endRefreshing()
+      print("error: \(error.localizedDescription)")
+    })
   }
   
 
@@ -77,9 +93,21 @@ class ProfileViewController: UIViewController, UITableViewDelegate, UITableViewD
     cell.userName.text = tweet.user?.name
     cell.tagline.text = tweet.user?.screenName
     cell.thumbnailImage.setImageWith((tweet.user?.profileUrl)!)
-    cell.timestamp.text = tweet.timestamp
+    cell.timestamp.text = tweet.abbreviatedTimestamp()
     cell.content.text = tweet.text
+    cell.bottomActionBar.setFavorited(value: tweet.favorited)
+    cell.bottomActionBar.setRetweeted(value: tweet.retweeted)
     return cell
+  }
+  
+  override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+    if let cell = sender as? TweetCell {
+      let indexPath = tableView.indexPath(for: cell)
+      let tweet = tweets[indexPath!.row]
+      
+      let detailViewController = segue.destination as! DetailedTweetViewController
+      detailViewController.tweet = tweet
+    }
   }
 
 }

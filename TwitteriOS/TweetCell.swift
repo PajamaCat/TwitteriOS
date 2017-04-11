@@ -9,19 +9,18 @@
 import UIKit
 
 @objc protocol TweetCellDelegate {
-  @objc optional func onThumbnailTapped(tweetCell: TweetCell)
+  @objc optional func tweetCellOnThumbnailTapped(_ tweetCell: TweetCell)
+  @objc func tweetCellShouldRefreshTweets(_ tweetCell: TweetCell)
 }
 
-class TweetCell: UITableViewCell {
+class TweetCell: UITableViewCell, BottomActionBarDelegate {
 
   @IBOutlet weak var thumbnailImage: UIImageView!
   @IBOutlet weak var userName: UILabel!
   @IBOutlet weak var tagline: UILabel!
   @IBOutlet weak var timestamp: UILabel!
   @IBOutlet weak var content: UILabel!
-  @IBOutlet weak var replyBtn: UIButton!
-  @IBOutlet weak var retweetBtn: UIButton!
-  @IBOutlet weak var loveBtn: UIButton!
+  @IBOutlet weak var bottomActionBar: BottomActionBar!
   
   weak var delegate: TweetCellDelegate?
   
@@ -46,9 +45,19 @@ class TweetCell: UITableViewCell {
   }
   
   func onImageTapped(gesture: UIGestureRecognizer) {
-    print("tapped")
-    delegate?.onThumbnailTapped!(tweetCell: self)
-
+    delegate?.tweetCellOnThumbnailTapped!(self)
   }
-
+  
+  func bottomActionBar(onCommentTapped: BottomActionBar) {
+    //
+  }
+  
+  func bottomActionBar(bottomActionBar: BottomActionBar, onFavoriteTapped value: Bool) {
+    delegate?.tweetCellShouldRefreshTweets(self)
+  }
+  
+  func bottomActionBar(bottomActionBar: BottomActionBar, onRetweetTapped value: Bool) {
+    delegate?.tweetCellShouldRefreshTweets(self)
+  }
+  
 }
