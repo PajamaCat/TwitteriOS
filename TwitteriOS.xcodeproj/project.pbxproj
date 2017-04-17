@@ -21,6 +21,8 @@
 		07A881CC1E9C21F300AD4BBB /* BottomActionBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = 07A881CB1E9C21F300AD4BBB /* BottomActionBar.swift */; };
 		07A881CE1E9C3CF900AD4BBB /* ComposeTweetViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 07A881CD1E9C3CF900AD4BBB /* ComposeTweetViewController.swift */; };
 		07C3B2B61E9BFD5600A5A805 /* DetailedTweetViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 07C3B2B51E9BFD5600A5A805 /* DetailedTweetViewController.swift */; };
+		07E0A10A1EA530F500774F43 /* HamburgerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 07E0A1091EA530F500774F43 /* HamburgerViewController.swift */; };
+		07E0A10C1EA536A600774F43 /* MenuViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 07E0A10B1EA536A600774F43 /* MenuViewController.swift */; };
 		183438169BE9E4BA4382CB5F /* Pods_TwitteriOS.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FB2D8F9629CA742762ECD0B8 /* Pods_TwitteriOS.framework */; };
 /* End PBXBuildFile section */
 
@@ -41,6 +43,8 @@
 		07A881CB1E9C21F300AD4BBB /* BottomActionBar.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BottomActionBar.swift; sourceTree = "<group>"; };
 		07A881CD1E9C3CF900AD4BBB /* ComposeTweetViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ComposeTweetViewController.swift; sourceTree = "<group>"; };
 		07C3B2B51E9BFD5600A5A805 /* DetailedTweetViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DetailedTweetViewController.swift; sourceTree = "<group>"; };
+		07E0A1091EA530F500774F43 /* HamburgerViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HamburgerViewController.swift; sourceTree = "<group>"; };
+		07E0A10B1EA536A600774F43 /* MenuViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MenuViewController.swift; sourceTree = "<group>"; };
 		72ACAADB4A4F1F22A51CF9EE /* Pods-TwitteriOS.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-TwitteriOS.release.xcconfig"; path = "Pods/Target Support Files/Pods-TwitteriOS/Pods-TwitteriOS.release.xcconfig"; sourceTree = "<group>"; };
 		CEA38E1E38BC60E08428C403 /* Pods-TwitteriOS.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-TwitteriOS.debug.xcconfig"; path = "Pods/Target Support Files/Pods-TwitteriOS/Pods-TwitteriOS.debug.xcconfig"; sourceTree = "<group>"; };
 		FB2D8F9629CA742762ECD0B8 /* Pods_TwitteriOS.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_TwitteriOS.framework; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -118,6 +122,8 @@
 				07189EA31E9BE1880019BA5C /* ProfileViewController.swift */,
 				07C3B2B51E9BFD5600A5A805 /* DetailedTweetViewController.swift */,
 				07A881CD1E9C3CF900AD4BBB /* ComposeTweetViewController.swift */,
+				07E0A1091EA530F500774F43 /* HamburgerViewController.swift */,
+				07E0A10B1EA536A600774F43 /* MenuViewController.swift */,
 			);
 			name = ViewControllers;
 			sourceTree = "<group>";
@@ -270,6 +276,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				07E0A10A1EA530F500774F43 /* HamburgerViewController.swift in Sources */,
 				07C3B2B61E9BFD5600A5A805 /* DetailedTweetViewController.swift in Sources */,
 				07A881C81E9951B100AD4BBB /* TwitterClient.swift in Sources */,
 				07189EA21E9B4BC90019BA5C /* TweetCell.swift in Sources */,
@@ -281,6 +288,7 @@
 				07A881CC1E9C21F300AD4BBB /* BottomActionBar.swift in Sources */,
 				07A881CE1E9C3CF900AD4BBB /* ComposeTweetViewController.swift in Sources */,
 				07A881C51E988E7500AD4BBB /* Tweet.swift in Sources */,
+				07E0A10C1EA536A600774F43 /* MenuViewController.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
