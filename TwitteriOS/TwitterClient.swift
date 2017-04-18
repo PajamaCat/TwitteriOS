@@ -46,6 +46,16 @@ class TwitterClient: BDBOAuth1SessionManager {
     }
   }
   
+  func mentions(success: @escaping ([Tweet]) -> (), failure: @escaping (Error) -> ()) {
+    get("1.1/statuses/mentions_timeline.json", parameters: nil, progress: nil, success: { (task, response) in
+      let dictionaries = response as! [NSDictionary]
+      let tweets = Tweet.tweetsWithArray(dictionaries: dictionaries)
+      success(tweets)
+    }) { (task, error) in
+      print("\(error.localizedDescription)")
+      failure(error)
+    }
+  }
   func userTimeline(parameters: Any?, success: @escaping ([Tweet]) -> (), failure: @escaping (Error) -> ()) {
     get("1.1/statuses/user_timeline.json", parameters: parameters, progress: nil, success: { (task, response) in
       let dictionaries = response as! [NSDictionary]

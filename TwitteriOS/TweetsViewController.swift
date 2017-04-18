@@ -14,8 +14,8 @@ class TweetsViewController: UIViewController, UITableViewDelegate, UITableViewDa
   var tweets: [Tweet]!
   var shouldRefreshTweets: Bool = false
   var refreshControl: UIRefreshControl!
+  var isFetchingMentions: Bool = false
 
-  
   @IBOutlet weak var tableView: UITableView!
   
   override func viewDidLoad() {
@@ -47,14 +47,30 @@ class TweetsViewController: UIViewController, UITableViewDelegate, UITableViewDa
   }
   
   func fetchTweets() {
-    TwitterClient.sharedInstance?.homeTimeline(success: { (tweets) in
-      self.tweets = tweets
-      self.tableView.reloadData()
-      self.refreshControl.endRefreshing()
-    }, failure: { (error) in
-      print("error: \(error.localizedDescription)")
-      self.refreshControl.endRefreshing()
-    })
+    if isFetchingMentions {
+      TwitterClient.sharedInstance?.mentions(success: { (tweets) in
+        self.onTweetsFetchedSuccess(tweets: tweets)
+      }, failure: { (error) in
+        self.onTweetsFetchedFailure(error: error)
+      })
+    } else {
+      TwitterClient.sharedInstance?.homeTimeline(success: { (tweets) in
+        self.onTweetsFetchedSuccess(tweets: tweets)
+      }, failure: { (error) in
+        self.onTweetsFetchedFailure(error: error)
+      })
+    }
+  }
+  
+  func onTweetsFetchedSuccess(tweets: [Tweet]) {
+    self.tweets = tweets
+    self.tableView.reloadData()
+    self.refreshControl.endRefreshing()
+  }
+  
+  func onTweetsFetchedFailure(error: Error) {
+    print("error: \(error.localizedDescription)")
+    self.refreshControl.endRefreshing()
   }
   
   func refreshControlAction(_ refreshControl: UIRefreshControl) {

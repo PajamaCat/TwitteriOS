@@ -10,21 +10,39 @@ import UIKit
 
 class HamburgerViewController: UIViewController {
 
-  @IBOutlet weak var leftMarginConstraint: NSLayoutConstraint!
   @IBOutlet weak var menuView: UIView!
+  @IBOutlet weak var leftMarginConstraint: NSLayoutConstraint!
   @IBOutlet weak var contentView: UIView!
   
   var originalLeftMargin: CGFloat!
-  var menuViewController: UIViewController! {
+  var menuViewController: MenuViewController! {
     didSet {
+      view.layoutIfNeeded()
       menuView.addSubview(menuViewController.view)
     }
   }
   
+  var contentViewController: UIViewController! {
+    didSet {
+      view.layoutIfNeeded()
+      contentView.addSubview(contentViewController.view)
+      UIView.animate(withDuration: 0.3, animations: { () -> Void in
+        self.leftMarginConstraint.constant = 0
+        self.view.layoutIfNeeded()
+      
+      })
+    }
+  }
+  
   override func viewDidLoad() {
-      super.viewDidLoad()
+    super.viewDidLoad()
 
-      // Do any additional setup after loading the view.
+    // Do any additional setup after loading the view.
+    let storyboard = UIStoryboard(name: "Main", bundle: nil)
+    let menuViewController = storyboard.instantiateViewController(withIdentifier: "MenuViewController") as! MenuViewController
+    self.menuViewController = menuViewController
+    self.menuViewController.hamburgerViewController = self
+    self.contentViewController = menuViewController.viewControllers[1]
   }
 
   override func didReceiveMemoryWarning() {
@@ -43,7 +61,7 @@ class HamburgerViewController: UIViewController {
     } else if sender.state == UIGestureRecognizerState.ended {
       UIView.animate(withDuration: 0.3, animations: {
         if velocity.x > 0 {
-          self.leftMarginConstraint.constant = self.view.frame.size.width - 50
+          self.leftMarginConstraint.constant = self.view.frame.size.width - self.view.frame.size.width * 0.25
         } else {
           self.leftMarginConstraint.constant = 0
         }
