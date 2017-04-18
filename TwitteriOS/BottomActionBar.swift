@@ -16,6 +16,7 @@ import UIKit
 
 class BottomActionBar: UIView {
 
+  @IBOutlet weak var contentView: UIView!
   @IBOutlet weak var commentIcon: UIButton!
   @IBOutlet weak var retweetIcon: UIButton!
   @IBOutlet weak var loveIcon: UIButton!
@@ -25,7 +26,23 @@ class BottomActionBar: UIView {
   
   weak var delegate: BottomActionBarDelegate?
   
-  override func awakeFromNib() {
+  override init(frame: CGRect) {
+    super.init(frame: frame)
+    initSubviews()
+
+  }
+  
+  required init?(coder aDecoder: NSCoder) {
+    super.init(coder: aDecoder)
+    initSubviews()
+  }
+  
+  func initSubviews() {
+    let nib = UINib(nibName: "BottomActionBar", bundle: nil)
+    nib.instantiate(withOwner: self, options: nil)
+    contentView.frame = bounds
+    addSubview(contentView)
+    
     let commentImg = #imageLiteral(resourceName: "reply").withRenderingMode(.alwaysTemplate)
     commentIcon.setImage(commentImg, for: .normal)
     commentIcon.tintColor = UIColor.lightGray
@@ -33,7 +50,7 @@ class BottomActionBar: UIView {
     let retweetImg = #imageLiteral(resourceName: "retweet").withRenderingMode(.alwaysTemplate)
     retweetIcon.setImage(retweetImg, for: .normal)
     setRetweeted(value: retweeted)
-
+    
     let favoriteImg = #imageLiteral(resourceName: "love").withRenderingMode(.alwaysTemplate)
     loveIcon.setImage(favoriteImg, for: .normal)
     setFavorited(value: favorited)

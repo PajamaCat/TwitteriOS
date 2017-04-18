@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="11762" systemVersion="16D32" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES">
+    <device id="retina4_7" orientation="portrait">
+        <adaptation id="fullscreen"/>
+    </device>
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="11757"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="BottomActionBar" customModule="TwitteriOS" customModuleProvider="target">
+            <connections>
+                <outlet property="commentIcon" destination="n4J-Iw-wMK" id="mZ3-gZ-2Xi"/>
+                <outlet property="contentView" destination="iN0-l3-epB" id="XxB-jG-ArT"/>
+                <outlet property="loveIcon" destination="1wR-6l-9Il" id="p4W-Aw-wSq"/>
+                <outlet property="retweetIcon" destination="rps-NE-aLS" id="85k-VV-cdK"/>
+            </connections>
+        </placeholder>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <view contentMode="scaleToFill" id="iN0-l3-epB">
+            <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
+            <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+            <subviews>
+                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="rps-NE-aLS" userLabel="retweetIcon">
+                    <rect key="frame" x="72" y="8" width="24" height="24"/>
+                    <constraints>
+                        <constraint firstAttribute="width" constant="24" id="M74-2t-AJQ"/>
+                        <constraint firstAttribute="height" constant="24" id="iVk-MZ-OdG"/>
+                    </constraints>
+                    <state key="normal" backgroundImage="retweet"/>
+                    <connections>
+                        <action selector="onRetweetTapped:" destination="-1" eventType="touchUpInside" id="bnO-bC-AqS"/>
+                    </connections>
+                </button>
+                <button opaque="NO" contentMode="scaleAspectFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="n4J-Iw-wMK" userLabel="commentIcon">
+                    <rect key="frame" x="16" y="8" width="24" height="24"/>
+                    <constraints>
+                        <constraint firstAttribute="height" constant="24" id="To5-dl-i55"/>
+                        <constraint firstAttribute="width" constant="24" id="xQo-NR-BCr"/>
+                    </constraints>
+                    <color key="tintColor" white="0.66666666666666663" alpha="1" colorSpace="calibratedWhite"/>
+                    <state key="normal" backgroundImage="reply"/>
+                    <connections>
+                        <action selector="onCommentTapped:" destination="-1" eventType="touchUpInside" id="zPg-bZ-gVp"/>
+                    </connections>
+                </button>
+                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="1wR-6l-9Il" userLabel="loveIcon">
+                    <rect key="frame" x="128" y="8" width="24" height="24"/>
+                    <constraints>
+                        <constraint firstAttribute="height" constant="24" id="2IN-uS-STy"/>
+                        <constraint firstAttribute="width" constant="24" id="PuP-sp-cjA"/>
+                    </constraints>
+                    <state key="normal" backgroundImage="love"/>
+                    <connections>
+                        <action selector="onFavoriteTapped:" destination="-1" eventType="touchUpInside" id="YU1-lB-EXq"/>
+                    </connections>
+                </button>
+            </subviews>
+            <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+            <constraints>
+                <constraint firstItem="n4J-Iw-wMK" firstAttribute="leading" secondItem="iN0-l3-epB" secondAttribute="leading" constant="16" id="0uj-n8-rcy"/>
+                <constraint firstItem="rps-NE-aLS" firstAttribute="centerY" secondItem="n4J-Iw-wMK" secondAttribute="centerY" id="0zO-eq-L2A"/>
+                <constraint firstItem="rps-NE-aLS" firstAttribute="leading" secondItem="n4J-Iw-wMK" secondAttribute="trailing" constant="32" id="AC9-r3-LZD"/>
+                <constraint firstItem="n4J-Iw-wMK" firstAttribute="top" secondItem="iN0-l3-epB" secondAttribute="top" constant="8" id="Uoj-V4-u21"/>
+                <constraint firstItem="1wR-6l-9Il" firstAttribute="centerY" secondItem="n4J-Iw-wMK" secondAttribute="centerY" id="YjN-0U-viF"/>
+                <constraint firstItem="1wR-6l-9Il" firstAttribute="leading" secondItem="rps-NE-aLS" secondAttribute="trailing" constant="32" id="hit-QK-QqH"/>
+            </constraints>
+        </view>
+    </objects>
+    <resources>
+        <image name="love" width="24" height="24"/>
+        <image name="reply" width="24" height="24"/>
+        <image name="retweet" width="24" height="24"/>
+    </resources>
+</document>

@@ -11,31 +11,51 @@ import UIKit
 class MenuViewController: UIViewController, UITableViewDelegate, UITableViewDataSource {
 
   @IBOutlet weak var tableView: UITableView!
+  @IBOutlet weak var profileImage: UIImageView!
+  @IBOutlet weak var tagline: UILabel!
+  @IBOutlet weak var username: UILabel!
   
   var viewControllers: [UIViewController] = []
   var hamburgerViewController: HamburgerViewController!
   
-  private var userProfileViewController: UIViewController!
-  private var homeTimelineViewController: UIViewController!
-  private var mentionsViewController: UIViewController!
+  private var profileNavigationController: UINavigationController!
+  private var timelineNavigationController: UINavigationController!
+  private var mentionsNavigationController: UINavigationController!
   
   let titles = ["View Profile", "Home Timeline", "Mentions"]
   
   override func viewDidLoad() {
-      super.viewDidLoad()
+    super.viewDidLoad()
+    
+    if let user = User.currentUser {
+      profileImage.setImageWith(user.profileUrl!)
+      profileImage.layer.cornerRadius = 5
+      profileImage.clipsToBounds = true
+      tagline.text = user.screenName
+      username.text = user.name
+    }
     
     tableView.delegate = self
     tableView.dataSource = self
 
     // Do any additional setup after loading the view.
     let storyboard = UIStoryboard(name: "Main", bundle: nil)
-    userProfileViewController = storyboard.instantiateViewController(withIdentifier: "ProfileViewNavigationController")
-    homeTimelineViewController = storyboard.instantiateViewController(withIdentifier: "TweetsViewNavigationController")
-    mentionsViewController = storyboard.instantiateViewController(withIdentifier: "TweetsViewNavigationController")
+    profileNavigationController = storyboard.instantiateViewController(withIdentifier: "ProfileViewNavigationController") as! UINavigationController
+    timelineNavigationController = storyboard.instantiateViewController(withIdentifier: "TweetsViewNavigationController") as! UINavigationController
+    mentionsNavigationController = storyboard.instantiateViewController(withIdentifier: "TweetsViewNavigationController") as! UINavigationController
     
-    viewControllers.append(userProfileViewController)
-    viewControllers.append(homeTimelineViewController)
-    viewControllers.append(mentionsViewController)
+    let userProfileViewController = profileNavigationController.viewControllers[0] as! ProfileViewController
+    userProfileViewController.user = User.currentUser
+    
+    let homeTimelineViewController = timelineNavigationController.viewControllers[0] as! TweetsViewController
+    homeTimelineViewController.isFetchingMentions = false
+    
+    let mentionsViewController = mentionsNavigationController.viewControllers[0] as! TweetsViewController
+    mentionsViewController.isFetchingMentions = true
+    
+    viewControllers.append(profileNavigationController)
+    viewControllers.append(timelineNavigationController)
+    viewControllers.append(mentionsNavigationController)
 
   }
 
